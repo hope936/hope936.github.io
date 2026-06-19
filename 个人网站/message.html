@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>留言板</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <h1>访客留言板</h1>
+    <form id="msgForm">
+        <p>昵称：<input type="text" id="nickname" required></p>
+        <p>留言内容：<br>
+            <textarea id="msgContent" rows="5" style="width:400px;" required></textarea>
+        </p>
+        <input type="submit" value="提交留言">
+    </form>
+
+    <h3>全部留言</h3>
+    <div id="msgListBox"></div>
+    <a href="index.html" style="margin-top:20px;display:block;">返回首页</a>
+
+    <script src="js/msg.js"></script>
+    <script>
+        // 渲染所有留言
+        function renderMsg(){
+            let box = document.getElementById("msgListBox");
+            box.innerHTML = "";
+            let list = getMsgList();
+            if(list.length == 0){
+                box.innerHTML = "<p>暂无留言，快来留下第一条吧！</p>";
+                return;
+            }
+            list.forEach(msg=>{
+                box.innerHTML += `
+                    <div class="msg-item">
+                        <span style="color:#666;">${msg.name} · ${msg.time}</span>
+                        <p>${msg.content}</p>
+                    </div>
+                `
+            })
+        }
+        // 页面加载渲染留言
+        renderMsg();
+        // 提交留言
+        document.getElementById("msgForm").addEventListener("submit",function(e){
+            e.preventDefault();
+            let name = document.getElementById("nickname").value.trim();
+            let content = document.getElementById("msgContent").value.trim();
+            addMsg(name,content);
+            this.reset();
+            renderMsg();
+        })
+    </script>
+</body>
+</html>
