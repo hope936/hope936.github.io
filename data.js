@@ -2,12 +2,12 @@ const userInfo = {
     name:"邓欣",
     intro:"物联网专业大二学生，喜欢记录学习笔记、分享生活日常",
     hobby:"羽毛球、美食、编程、摄影",
-    avatar:"./images/avatar.jpg"
+    avatar:"avatar.jpg"
 }
 
 const adList = [
-    {src:"./images/ad1.jpg",link:"https://www.bilibili.com"},
-    {src:"./images/ad2.jpg",link:"https://github.com"}
+    {src:"ad1.jpg",link:"https://www.bilibili.com"},
+    {src:"ad2.jpg",link:"https://github.com"}
 ]
 
 const friendLink = [
@@ -22,8 +22,8 @@ let articleList = JSON.parse(localStorage.getItem("articleList")) || [
 ]
 
 let mediaList = JSON.parse(localStorage.getItem("mediaList")) || [
-    {title:"校园风景",src:"./images/campus.jpg",type:1,publish_date:"2026-06-17"},
-    {title:"我的可爱的仓鼠",src:"./video/badminton.mp4",type:2,publish_date:"2026-06-17"}
+    {title:"校园风景",src:"campus.jpg",type:1,publish_date:"2026-06-17"},
+    {title:"我的可爱的仓鼠",src:"badminton.mp4",type:2,publish_date:"2026-06-17"}
 ]
 
 localStorage.setItem("articleList",JSON.stringify(articleList));
