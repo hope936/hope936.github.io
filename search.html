@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>内容检索</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <h1>文章/多媒体检索</h1>
+    <form id="searchForm">
+        标题关键词：<input type="text" id="titleInput" placeholder="输入标题">
+        发布日期：<input type="date" id="dateInput">
+        <input type="submit" value="查询">
+    </form>
+
+    <h3>文章检索结果</h3>
+    <div id="artResult"></div>
+    <h3>图片/视频检索结果</h3>
+    <div id="medResult"></div>
+    <a href="index.html" style="display:block;margin-top:20px;">返回首页</a>
+
+    <script src="js/data.js"></script>
+    <script src="js/search.js"></script>
+    <script>
+        const form = document.getElementById("searchForm");
+        form.addEventListener("submit",function(e){
+            e.preventDefault();
+            let key = document.getElementById("titleInput").value;
+            let date = document.getElementById("dateInput").value;
+            let res = searchData(key,date);
+            // 渲染文章
+            let artBox = document.getElementById("artResult");
+            artBox.innerHTML = "";
+            if(res.artResult.length==0) artBox.innerHTML = "<p>无匹配文章</p>";
+            res.artResult.forEach(item=>{
+                artBox.innerHTML += `
+                    <div class="card">
+                        <h4>${item.title}</h4>
+                        <span>日期：${item.publish_date}</span>
+                        <p>${item.content}</p>
+                    </div>
+                `
+            })
+            
+            let medBox = document.getElementById("medResult");
+            medBox.innerHTML = "";
+            if(res.medResult.length==0) medBox.innerHTML = "<p>无匹配图片/视频</p>";
+            res.medResult.forEach(item=>{
+                medBox.innerHTML += `
+                    <div class="media-card">
+                        <h4>${item.title}</h4>
+                        ${item.type==1 ? `<img src="${item.src}" width="180">` : `<video src="${item.src}" width="180" controls></video>`}
+                    </div>
+                `
+            })
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>个人主页</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <script src="./js/data.js"></script>
+</head>
+<body>
+<div class="welcome-title">
+    <h1>欢迎查看邓欣的个人主页</h1>
+</div>
+
+<div class="top-row">
+    <div class="sidebar">
+        <img class="avatar" id="avatarImg">
+        <h2 id="userName"></h2>
+        <p id="userIntro"></p>
+        <p id="userHobby"></p>
+        <hr style="margin:15px 0;">
+
+        <div class="message-board">
+            <h3>留言板</h3>
+            <input type="text" id="nameInput" placeholder="输入你的昵称">
+            <textarea id="msgInput" placeholder="写下你的留言"></textarea>
+            <button id="submitBtn">提交留言</button>
+            <div id="msgList"></div>
+        </div>
+    </div>
+
+    <div class="ad-wrap">
+        <h3 class="ad-title">广告</h3>
+        <div class="ad-box">
+            <script>
+                adList.forEach(item=>{
+                    document.write(`
+                        <div class="ad-item">
+                            <a href="${item.link}" target="_blank">
+                                <img src="${item.src}">
+                            </a>
+                        </div>
+                    `)
+                })
+            </script>
+        </div>
+    </div>
+</div>
+
+<div class="main">
+    <h2>📝 最新文章（按发布日期自动排序）</h2>
+    <div id="articleBox"></div>
+
+    <h2>🖼️ 图片/视频分享（最新更新）</h2>
+    <div id="mediaBox"></div>
+    
+    <div id="linkBoxMain">
+        <h3>友情链接</h3>
+        <div class="link-wrap"></div>
+    </div>
+    
+    <a href="search.html" class="btn search-btn">检索文章/资源</a>
+</div>
+
+<script>
+window.onload = function(){
+    document.getElementById("avatarImg").src = userInfo.avatar;
+    document.getElementById("userName").innerText = userInfo.name;
+    document.getElementById("userIntro").innerText = "个人简介：" + userInfo.intro;
+    document.getElementById("userHobby").innerText = "爱好：" + userInfo.hobby;
+
+    let linkWrap = document.querySelector("#linkBoxMain .link-wrap");
+    friendLink.forEach(link=>{
+        let a = document.createElement("a");
+        a.className = "link-item";
+        a.href = link.url;
+        a.target = "_blank";
+        a.innerText = link.name;
+        linkWrap.appendChild(a);
+    })
+
+    let sortArt = [...articleList].sort((a,b)=>new Date(b.publish_date)-new Date(a.publish_date));
+    let artBox = document.getElementById("articleBox");
+    sortArt.slice(0,5).forEach(art=>{
+        artBox.innerHTML += `
+            <div class="card">
+                <h4>${art.title}</h4>
+                <span>发布日期：${art.publish_date}</span>
+                <p>${art.content}</p>
+            </div>
+        `
+    })
+
+    let sortMed = [...mediaList].sort((a,b)=>new Date(b.publish_date)-new Date(a.publish_date));
+    let medBox = document.getElementById("mediaBox");
+    sortMed.slice(0,6).forEach(med=>{
+        medBox.innerHTML += `
+            <div class="media-card">
+                <h4>${med.title}</h4>
+                ${med.type==1 ? `<img src="${med.src}">` : `<video src="${med.src}" controls></video>`}
+            </div>
+        `
+    })
+
+    const nameInput = document.getElementById("nameInput");
+    const msgInput = document.getElementById("msgInput");
+    const submitBtn = document.getElementById("submitBtn");
+    const msgList = document.getElementById("msgList");
+
+    function renderMsg(){
+        let data = JSON.parse(localStorage.getItem("msgData")) || [];
+        msgList.innerHTML = "";
+        data.forEach(item=>{
+            let div = document.createElement("div");
+            div.className = "msg-item";
+            div.innerHTML = `<strong>${item.name}</strong>：${item.content}`;
+            msgList.appendChild(div);
+        })
+    }
+    renderMsg();
+
+    submitBtn.onclick = function(){
+        let name = nameInput.value.trim();
+        let msg = msgInput.value.trim();
+        if(!name || !msg) return alert("昵称和留言不能为空");
+        let data = JSON.parse(localStorage.getItem("msgData")) || [];
+        data.push({name,content:msg});
+        localStorage.setItem("msgData",JSON.stringify(data));
+        nameInput.value = "";
+        msgInput.value = "";
+        renderMsg();
+    }
+}
+</script>
+</body>
+</html>
